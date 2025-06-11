@@ -16,7 +16,7 @@ namespace TrySqlServer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=EfDemoDb;Integrated Security=true;");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=EfDemoDbTest;Integrated Security=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

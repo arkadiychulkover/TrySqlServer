@@ -1,4 +1,6 @@
-﻿using TrySqlServer.Entity;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using TrySqlServer.Entity;
 
 namespace TrySqlServer
 {
@@ -15,7 +17,7 @@ namespace TrySqlServer
             ShowStartMenu();
             int casee = int.Parse(Console.ReadLine());
 
-            while (casee != 3)
+            while (casee != 4)
             {
                 switch (casee)
                 {
@@ -65,6 +67,9 @@ namespace TrySqlServer
                     case 2:
                         userController.Register(context);
                         break;
+                    case 3:
+                        userController.AddUserBySql(context);
+                        break;
                     default:
                         Console.WriteLine("Invalid option, try again.");
                         break;
@@ -78,7 +83,8 @@ namespace TrySqlServer
         {
             Console.WriteLine("1. Loggin");
             Console.WriteLine("2. Register");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Register BY SQL");
+            Console.WriteLine("4. Exit");
             Console.Write("Choose an option: ");
         }
         public static void ShowMovies(AppDBContext context)
@@ -230,16 +236,34 @@ namespace TrySqlServer
             foreach (var user in context.Viever)
                 Console.WriteLine($"{user.Username} --- {user.Title}");
         }
+        public void AddUserBySql(AppDBContext context)
+        {
+            Console.Write("Enter username: ");
+            string username = Console.ReadLine();
+            Console.Write("Enter email: ");
+            string email = Console.ReadLine();
+            Console.Write("Enter password: ");
+            string password = Console.ReadLine();
+            string sql = "INSERT INTO Users (Username, Email, Password) VALUES (@Username, @Email, @Password)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Username", username),
+                new SqlParameter("@Email", email),
+                new SqlParameter("@Password", password)
+            };
+            context.Database.ExecuteSqlRaw(sql, parameters);// как на паре не получилось писало что параметры не те
+            Console.WriteLine("User added successfully");
+        }
         public void ShowMenu()
         {
+            Console.WriteLine("\nMenu:");
             Console.WriteLine("1. Add Movie");
             Console.WriteLine("2. Show All Movies");
             Console.WriteLine("3. Show User Movies");
             Console.WriteLine("4. Delete Movie");
             Console.WriteLine("5. Rewrite profile");
             Console.WriteLine("6. Show All Movies BY VIEWER");
-            Console.WriteLine("7. Add student BY SQL");
-            Console.WriteLine("8. LoggOut");
+            Console.WriteLine("7. LoggOut");
             Console.Write("Choose an option: ");
         }
     }
